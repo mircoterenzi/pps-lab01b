@@ -48,4 +48,10 @@ public class BankAccountTest {
         assertThrows(IllegalStateException.class, () -> this.silver.withdraw(1200));
     }
 
+    @Test
+    public void testCannotWithdrawOverLimit() {
+        this.gold.deposit(1000);
+        assertThrows(IllegalStateException.class, () -> this.gold.withdraw(2000));
+    }
+
 }
