@@ -13,6 +13,6 @@ public class BronzeBankAccount extends BankAccountDecorator {
         if (this.getBalance() < amount){
             throw new IllegalStateException();
         }
-        super.account.withdraw(amount + FEE);
+        super.account.withdraw(amount + (amount < 100 ? 0 : FEE));
     }
 }
