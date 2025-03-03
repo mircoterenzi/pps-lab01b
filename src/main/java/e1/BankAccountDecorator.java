@@ -1,7 +1,7 @@
 package e1;
 
 public class BankAccountDecorator implements BankAccount {
-    BankAccount account;
+   protected final BankAccount account;
 
     public BankAccountDecorator(BankAccount account) {
         this.account = account;
