@@ -1,14 +1,17 @@
 package e1;
 
 public class GoldBankAccount implements BankAccount {
+
+    private final BankAccount base = new CoreBankAccount();
+
     @Override
     public int getBalance() {
-        return 0;
+        return this.base.getBalance();
     }
 
     @Override
     public void deposit(int amount) {
-
+        this.base.deposit(amount);
     }
 
     @Override

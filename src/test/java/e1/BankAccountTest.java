@@ -3,8 +3,7 @@ package e1;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BankAccountTest {
 
@@ -24,7 +23,11 @@ public class BankAccountTest {
     @Test
     public void testCanDeposit() {
         this.silver.deposit(1000);
-        assertEquals(1000, this.silver.getBalance());
+        this.gold.deposit(1000);
+        assertAll(
+                () -> assertEquals(1000, this.silver.getBalance()),
+                () -> assertEquals(1000, this.gold.getBalance())
+        );
     }
 
     @Test
