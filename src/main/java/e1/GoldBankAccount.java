@@ -2,6 +2,7 @@ package e1;
 
 public class GoldBankAccount implements BankAccount {
 
+    public static final int OVERDRAFT_AMOUNT = 500;
     private final BankAccount base = new CoreBankAccount();
 
     @Override
@@ -16,7 +17,7 @@ public class GoldBankAccount implements BankAccount {
 
     @Override
     public void withdraw(int amount) {
-        if (this.getBalance() + 500 < amount){
+        if (this.getBalance() + OVERDRAFT_AMOUNT < amount){
             throw new IllegalStateException();
         }
         this.base.withdraw(amount);

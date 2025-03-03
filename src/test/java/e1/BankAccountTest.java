@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class BankAccountTest {
 
+    public static final int INITIAL_BALANCE = 1000;
+    public static final int WITHDRAW_AMOUNT = 200;
     private BankAccount silver, gold;
 
     @BeforeEach
@@ -22,43 +24,49 @@ public class BankAccountTest {
 
     @Test
     public void testCanDeposit() {
-        this.silver.deposit(1000);
-        this.gold.deposit(1000);
+        this.silver.deposit(INITIAL_BALANCE);
+        this.gold.deposit(INITIAL_BALANCE);
         assertAll(
-                () -> assertEquals(1000, this.silver.getBalance()),
-                () -> assertEquals(1000, this.gold.getBalance())
+                () -> assertEquals(INITIAL_BALANCE, this.silver.getBalance()),
+                () -> assertEquals(INITIAL_BALANCE, this.gold.getBalance())
         );
     }
 
     @Test
     public void testCanWithdraw() {
-        this.silver.deposit(1000);
-        this.silver.withdraw(200);
-        this.gold.deposit(1000);
-        this.gold.withdraw(200);
+        this.silver.deposit(INITIAL_BALANCE);
+        this.silver.withdraw(WITHDRAW_AMOUNT);
+        this.gold.deposit(INITIAL_BALANCE);
+        this.gold.withdraw(WITHDRAW_AMOUNT);
         assertAll(
-                () -> assertEquals(799, this.silver.getBalance()),
-                () -> assertEquals(800, this.gold.getBalance())
+                () -> assertEquals(
+                        INITIAL_BALANCE - WITHDRAW_AMOUNT - SilverBankAccount.FEE,
+                        this.silver.getBalance()
+                ),
+                () -> assertEquals(INITIAL_BALANCE - WITHDRAW_AMOUNT, this.gold.getBalance())
         );
     }
 
     @Test
     public void testCannotWithdrawMoreThanAvailable(){
-        this.silver.deposit(1000);
-        assertThrows(IllegalStateException.class, () -> this.silver.withdraw(1200));
+        this.silver.deposit(INITIAL_BALANCE);
+        assertThrows(IllegalStateException.class, () -> this.silver.withdraw(INITIAL_BALANCE + WITHDRAW_AMOUNT));
     }
 
     @Test
     public void testCannotWithdrawOverLimit() {
-        this.gold.deposit(1000);
-        assertThrows(IllegalStateException.class, () -> this.gold.withdraw(2000));
+        this.gold.deposit(INITIAL_BALANCE);
+        assertThrows(
+                IllegalStateException.class,
+                () -> this.gold.withdraw(INITIAL_BALANCE + GoldBankAccount.OVERDRAFT_AMOUNT + WITHDRAW_AMOUNT)
+        );
     }
 
     @Test
     public void testCanWithdrawUpToLimit() {
-        this.gold.deposit(1000);
-        this.gold.withdraw(1300);
-        assertEquals(-300, this.gold.getBalance());
+        this.gold.deposit(INITIAL_BALANCE);
+        this.gold.withdraw(INITIAL_BALANCE + GoldBankAccount.OVERDRAFT_AMOUNT);
+        assertEquals(-GoldBankAccount.OVERDRAFT_AMOUNT, this.gold.getBalance());
     }
 
 }
