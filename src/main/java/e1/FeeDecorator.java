@@ -3,7 +3,6 @@ package e1;
 import java.util.function.Function;
 
 public class FeeDecorator extends BankAccountDecorator {
-
     private final Function<Integer, Integer> calculateFeeFromAmount;
 
     public FeeDecorator(BankAccount account, Function<Integer, Integer> calculateFeeFromAmount) {

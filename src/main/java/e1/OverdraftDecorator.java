@@ -1,7 +1,6 @@
 package e1;
 
 public class OverdraftDecorator extends BankAccountDecorator {
-
     private final int overdraftAmountLimit;
 
     public OverdraftDecorator(BankAccount account, int overdraftAmountLimit) {

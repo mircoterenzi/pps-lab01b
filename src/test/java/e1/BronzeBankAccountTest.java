@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BronzeBankAccountTest extends BankAccountTest {
-
     public static final int WITHDRAW_AMOUNT_WITHOUT_FEE = 50;
 
     @BeforeEach
