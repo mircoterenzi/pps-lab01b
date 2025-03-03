@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BronzeBankAccountTest extends BankAccountTest {
+
+    public static final int WITHDRAW_AMOUNT_WITHOUT_FEE = 50;
+
     @BeforeEach
     void init(){
         super.account = super.factory.getBronzeBankAccount();
@@ -21,7 +24,7 @@ public class BronzeBankAccountTest extends BankAccountTest {
     @Test
     public void testFreeWithdrawalFee() {
         this.account.deposit(INITIAL_BALANCE);
-        this.account.withdraw(50);
-        assertEquals(INITIAL_BALANCE - 50, this.account.getBalance());
+        this.account.withdraw(WITHDRAW_AMOUNT_WITHOUT_FEE);
+        assertEquals(INITIAL_BALANCE - WITHDRAW_AMOUNT_WITHOUT_FEE, this.account.getBalance());
     }
 }
