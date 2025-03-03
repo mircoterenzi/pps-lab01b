@@ -34,7 +34,12 @@ public class BankAccountTest {
     public void testCanWithdraw() {
         this.silver.deposit(1000);
         this.silver.withdraw(200);
-        assertEquals(799, this.silver.getBalance());
+        this.gold.deposit(1000);
+        this.gold.withdraw(200);
+        assertAll(
+                () -> assertEquals(799, this.silver.getBalance()),
+                () -> assertEquals(800, this.gold.getBalance())
+        );
     }
 
     @Test
