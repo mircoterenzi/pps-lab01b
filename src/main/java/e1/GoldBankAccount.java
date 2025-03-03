@@ -16,7 +16,7 @@ public class GoldBankAccount implements BankAccount {
 
     @Override
     public void withdraw(int amount) {
-        if (this.getBalance() < amount){
+        if (this.getBalance() + 500 < amount){
             throw new IllegalStateException();
         }
         this.base.withdraw(amount);
