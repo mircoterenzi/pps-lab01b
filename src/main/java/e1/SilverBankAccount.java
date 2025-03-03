@@ -10,9 +10,6 @@ public class SilverBankAccount extends BankAccountDecorator {
 
     @Override
     public void withdraw(int amount) {
-        if (this.getBalance() < amount){
-            throw new IllegalStateException();
-        }
         super.account.withdraw(amount + FEE);
     }
 }

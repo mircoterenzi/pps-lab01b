@@ -11,9 +11,6 @@ public class BronzeBankAccount extends BankAccountDecorator {
 
     @Override
     public void withdraw(int amount) {
-        if (this.getBalance() < amount){
-            throw new IllegalStateException();
-        }
         super.account.withdraw(amount + (amount < FREE_WITHDRAW_MAX_AMOUNT ? 0 : FEE));
     }
 }

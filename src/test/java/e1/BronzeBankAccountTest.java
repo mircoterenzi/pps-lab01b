@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BronzeBankAccountTest extends BankAccountTest {
 
@@ -26,5 +27,14 @@ public class BronzeBankAccountTest extends BankAccountTest {
         this.account.deposit(INITIAL_BALANCE);
         this.account.withdraw(WITHDRAW_AMOUNT_WITHOUT_FEE);
         assertEquals(INITIAL_BALANCE - WITHDRAW_AMOUNT_WITHOUT_FEE, this.account.getBalance());
+    }
+
+    @Test
+    public void testCannotWithdrawMoreThanAvailable(){
+        super.account.deposit(INITIAL_BALANCE);
+        assertThrows(
+                IllegalStateException.class,
+                () -> super.account.withdraw(INITIAL_BALANCE + WITHDRAW_AMOUNT)
+        );
     }
 }
