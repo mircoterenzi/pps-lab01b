@@ -13,8 +13,8 @@ public class BankAccountTest {
 
     @BeforeEach
     void init(){
-        this.silver = new SilverBankAccount();
-        this.gold = new GoldBankAccount();
+        this.silver = new BankAccountDecorator(new SilverBankAccount());
+        this.gold = new BankAccountDecorator(new GoldBankAccount());
     }
 
     @Test
