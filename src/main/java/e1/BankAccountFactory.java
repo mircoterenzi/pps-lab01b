@@ -3,10 +3,17 @@ package e1;
 public class BankAccountFactory {
 
     public static final int DEFAULT_OVERDRAFT_AMOUNT_LIMIT = 0;
+    public static final int FEE = 1;
 
     public BankAccount getSilverBankAccount() {
         return new BankAccountDecorator(
-                new OverdraftDecorator(new SilverBankAccount(new CoreBankAccount()), DEFAULT_OVERDRAFT_AMOUNT_LIMIT)
+                new OverdraftDecorator(
+                        new FeeDecorator(
+                                new CoreBankAccount(),
+                                amount -> FEE
+                        ),
+                        DEFAULT_OVERDRAFT_AMOUNT_LIMIT
+                )
         );
     }
 
