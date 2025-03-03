@@ -9,12 +9,13 @@ public class BankAccountTest {
 
     public static final int INITIAL_BALANCE = 1000;
     public static final int WITHDRAW_AMOUNT = 200;
+    private final BankAccountFactory factory = new BankAccountFactory();
     private BankAccount silver, gold;
 
     @BeforeEach
     void init(){
-        this.silver = new BankAccountDecorator(new SilverBankAccount(new CoreBankAccount()));
-        this.gold = new BankAccountDecorator(new GoldBankAccount(new CoreBankAccount()));
+        this.silver = this.factory.getSilverBankAccount();
+        this.gold = this.factory.getGoldBankAccount();
     }
 
     @Test
