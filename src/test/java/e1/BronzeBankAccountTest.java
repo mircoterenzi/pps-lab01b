@@ -17,16 +17,16 @@ public class BronzeBankAccountTest extends BankAccountTest {
 
     @Test
     public void testWithdrawalFee() {
-        this.account.deposit(INITIAL_BALANCE);
-        this.account.withdraw(WITHDRAW_AMOUNT);
-        assertEquals(INITIAL_BALANCE - WITHDRAW_AMOUNT - BankAccountFactory.FEE, this.account.getBalance());
+        super.account.deposit(INITIAL_BALANCE);
+        super.account.withdraw(WITHDRAW_AMOUNT);
+        assertEquals(INITIAL_BALANCE - WITHDRAW_AMOUNT - BankAccountFactory.FEE, super.account.getBalance());
     }
 
     @Test
     public void testFreeWithdrawalFee() {
-        this.account.deposit(INITIAL_BALANCE);
-        this.account.withdraw(WITHDRAW_AMOUNT_WITHOUT_FEE);
-        assertEquals(INITIAL_BALANCE - WITHDRAW_AMOUNT_WITHOUT_FEE, this.account.getBalance());
+        super.account.deposit(INITIAL_BALANCE);
+        super.account.withdraw(WITHDRAW_AMOUNT_WITHOUT_FEE);
+        assertEquals(INITIAL_BALANCE - WITHDRAW_AMOUNT_WITHOUT_FEE, super.account.getBalance());
     }
 
     @Test
