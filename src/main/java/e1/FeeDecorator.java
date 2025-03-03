@@ -4,7 +4,6 @@ import java.util.function.Function;
 
 public class FeeDecorator extends BankAccountDecorator {
 
-    public static final int FEE = 1;
     private final Function<Integer, Integer> calculateFeeFromAmount;
 
     public FeeDecorator(BankAccount account, Function<Integer, Integer> calculateFeeFromAmount) {

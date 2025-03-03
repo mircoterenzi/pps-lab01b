@@ -15,7 +15,7 @@ public class SilverBankAccountTest extends BankAccountTest {
     public void testCanWithdraw() {
         super.account.deposit(INITIAL_BALANCE);
         super.account.withdraw(WITHDRAW_AMOUNT);
-        assertEquals(INITIAL_BALANCE - WITHDRAW_AMOUNT - FeeDecorator.FEE, super.account.getBalance());
+        assertEquals(INITIAL_BALANCE - WITHDRAW_AMOUNT - BankAccountFactory.FEE, super.account.getBalance());
     }
 
     @Test
