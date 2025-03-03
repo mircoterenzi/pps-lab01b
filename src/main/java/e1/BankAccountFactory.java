@@ -8,4 +8,8 @@ public class BankAccountFactory {
     public BankAccount getGoldBankAccount() {
         return new BankAccountDecorator(new GoldBankAccount(new CoreBankAccount()));
     }
+
+    public BankAccount getBronzeBankAccount() {
+        return new BankAccountDecorator(new BronzeBankAccount(new CoreBankAccount()));
+    }
 }
