@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class LogicTest {
 
-    public static final int SIZE = 4;
-    public static final Pair<Integer, Integer> PAWN_POSITION = new Pair<>(SIZE - 1, SIZE - 1);
+    public static final int SIZE = 3;
+    public static final Pair<Integer, Integer> PAWN_POSITION = new Pair<>(1, 2);
     public static final Pair<Integer, Integer> KINGHT_POSITION = new Pair<>(0, 0);
     private Logics logics;
 
@@ -21,5 +21,11 @@ public class LogicTest {
         this.logics = new LogicsImpl(SIZE, PAWN_POSITION, KINGHT_POSITION);
         this.logics.hit(KINGHT_POSITION.getX() + 1, KINGHT_POSITION.getY() + 1);
         assertTrue(this.logics.hasKnight(KINGHT_POSITION.getX(), KINGHT_POSITION.getY()));
+    }
+
+    @Test
+    public void testEatPawn() {
+        this.logics = new LogicsImpl(SIZE, PAWN_POSITION, KINGHT_POSITION);
+        assertTrue(this.logics.hit(PAWN_POSITION.getX(), PAWN_POSITION.getY()));
     }
 }
