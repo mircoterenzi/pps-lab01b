@@ -17,6 +17,18 @@ public class LogicTest {
     }
 
     @Test
+    public void testHasPawn() {
+        this.logics = new LogicsImpl(SIZE, PAWN_POSITION, KINGHT_POSITION);
+        assertTrue(this.logics.hasPawn(PAWN_POSITION.getX(), PAWN_POSITION.getY()));
+    }
+
+    @Test
+    public void testHasKnight() {
+        this.logics = new LogicsImpl(SIZE, PAWN_POSITION, KINGHT_POSITION);
+        assertTrue(this.logics.hasKnight(KINGHT_POSITION.getX(), KINGHT_POSITION.getY()));
+    }
+
+    @Test
     public void testIllegalMove() {
         this.logics = new LogicsImpl(SIZE, PAWN_POSITION, KINGHT_POSITION);
         this.logics.hit(KINGHT_POSITION.getX() + 1, KINGHT_POSITION.getY() + 1);
