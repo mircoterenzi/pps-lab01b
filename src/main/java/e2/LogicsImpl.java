@@ -1,5 +1,6 @@
 package e2;
 
+import java.nio.charset.CodingErrorAction;
 import java.util.*;
 
 public class LogicsImpl implements Logics {
@@ -14,6 +15,12 @@ public class LogicsImpl implements Logics {
         this.pawn = this.randomEmptyPosition();
         this.knight = this.randomEmptyPosition();	
     }
+
+	public LogicsImpl(int size, Pair<Integer, Integer> pawn, Pair<Integer, Integer> knight) {
+		this.size = size;
+		this.pawn = pawn;
+		this.knight = knight;
+	}
     
 	private final Pair<Integer,Integer> randomEmptyPosition(){
     	Pair<Integer,Integer> pos = new Pair<>(this.random.nextInt(size),this.random.nextInt(size));
