@@ -12,4 +12,10 @@ public class KnightMovementTest {
         MoveValidator validator = new KnightMoveValidator();
         assertFalse(validator.test(POSITION, new Pair<>(POSITION.getX() + 1, POSITION.getY() + 1)));
     }
+
+    @Test
+    public void testLegalMovement() {
+        MoveValidator validator = new KnightMoveValidator();
+        assertTrue(validator.test(POSITION, new Pair<>(POSITION.getX() + 2, POSITION.getY() + 1)));
+    }
 }
