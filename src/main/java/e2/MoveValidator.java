@@ -11,5 +11,5 @@ public interface MoveValidator {
      * @param endPosition Represent the coordinates of the end position.
      * @return true if movement from start to end position is possible.
      */
-    public boolean test(Pair<Integer, Integer> startPosition, Pair<Integer, Integer> endPosition);
+    boolean test(Pair<Integer, Integer> startPosition, Pair<Integer, Integer> endPosition);
 }
