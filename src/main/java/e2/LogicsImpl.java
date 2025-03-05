@@ -33,8 +33,9 @@ public class LogicsImpl implements Logics {
 		if (row<0 || col<0 || row >= this.size || col >= this.size) {
 			throw new IndexOutOfBoundsException();
 		}
-		if (validator.test(knight, new Pair<>(row, col))) {
-			this.knight = new Pair<>(row,col);
+		Pair<Integer, Integer> newPosition = new Pair<>(row, col);
+		if (validator.test(knight, newPosition)) {
+			this.knight = newPosition;
 			return this.pawn.equals(this.knight);
 		}
 		return false;
