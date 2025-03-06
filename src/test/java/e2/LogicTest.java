@@ -12,7 +12,7 @@ public class LogicTest {
 
     @BeforeEach
     public void setUp() {
-        this.logics = new LogicsImpl(
+        this.logics = new LogicsProxy(
                 SIZE,
                 PAWN_POSITION.getX(),
                 PAWN_POSITION.getY(),
