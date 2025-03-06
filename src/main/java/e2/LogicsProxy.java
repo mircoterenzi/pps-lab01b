@@ -2,7 +2,7 @@ package e2;
 
 public class LogicsProxy implements Logics {
 
-	private final BoardImpl board;
+	private final Board board;
 	private final Logics logics;
 
 	public LogicsProxy(int size){
