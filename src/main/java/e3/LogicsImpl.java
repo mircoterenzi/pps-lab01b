@@ -35,7 +35,7 @@ public class LogicsImpl implements Logics {
     }
 
     private boolean areAdjacent(Pair<Integer, Integer> first, Pair<Integer, Integer> second) {
-        return abs(first.getX() - second.getX()) == 1 || abs(first.getY() - second.getY()) == 1;
+        return abs(first.getX() - second.getX()) <= 1 && abs(first.getY() - second.getY()) <= 1;
     }
 
     @Override
