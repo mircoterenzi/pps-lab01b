@@ -3,6 +3,10 @@ package e3;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiFunction;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LogicTest {
@@ -17,16 +21,31 @@ public class LogicTest {
         this.logics = new LogicsImpl(SIZE, MINES);
     }
 
-    @Test
-    public void testInitiallyNotFlagged() {
-        boolean isAtLeastOneFlagged = false;
+    private List<Pair<Integer, Integer>> getCellList() {
+        List<Pair<Integer, Integer>> cells = new ArrayList<>();
         for (int x = 0; x < SIZE; x++) {
             for (int y = 0; y < SIZE; y++) {
-                Pair<Integer, Integer> pos = new Pair<>(x, y);
-                isAtLeastOneFlagged = isAtLeastOneFlagged || this.logics.isFlagged(pos);
+                cells.add(new Pair<>(x, y));
             }
         }
-        assertFalse(isAtLeastOneFlagged);
+        return cells;
+    }
+
+    private <X> X checkOnEachCell(X initialValue, BiFunction<Pair<Integer, Integer>, X, X> updateFunction) {
+        X value = initialValue;
+        for (Pair<Integer, Integer> cell : getCellList()) {
+            value = updateFunction.apply(cell, value);
+        }
+        return value;
+    }
+
+    @Test
+    public void testInitiallyNotFlagged() {
+        assertFalse(checkOnEachCell(
+                false,
+                (cell, isAtLeastOneFlagged) ->
+                        isAtLeastOneFlagged || this.logics.isFlagged(cell)
+        ));
     }
 
     @Test
@@ -36,16 +55,11 @@ public class LogicTest {
 
     @Test
     public void testRightMinesAmountGeneration() {
-        int mines = 0;
-        for (int x = 0; x < SIZE; x++) {
-            for (int y = 0; y < SIZE; y++) {
-                Pair<Integer, Integer> pos = new Pair<>(x, y);
-                if (this.logics.isMine(pos)) {
-                    mines++;
-                }
-            }
-        }
-        assertEquals(MINES, mines);
+        assertEquals(
+                MINES,
+                checkOnEachCell(0, (cell, mineCounter) ->
+                        this.logics.isMine(cell) ? mineCounter + 1 : mineCounter
+        ));
     }
 
     @Test
