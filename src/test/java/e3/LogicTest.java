@@ -9,6 +9,7 @@ public class LogicTest {
 
     public static final int SIZE = 5;
     public static final int MINES = 3;
+    public static final Pair<Integer, Integer> CELL = new Pair<>(2,2);
     private Logics logics;
 
     @BeforeEach
@@ -45,5 +46,11 @@ public class LogicTest {
             }
         }
         assertEquals(MINES, mines);
+    }
+
+    @Test
+    public void testSetFlag() {
+        this.logics.setFlag(CELL, true);
+        assertTrue(this.logics.isFlagged(CELL));
     }
 }

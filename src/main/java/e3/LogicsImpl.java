@@ -9,6 +9,7 @@ public class LogicsImpl implements Logics {
 
     private final Random random = new Random();
     private final List<Pair<Integer, Integer>> mines = new ArrayList<>();
+    private final List<Pair<Integer, Integer>> flagged = new ArrayList<>();
     private final int size;
 
     private void generateMines(int amount) {
@@ -39,12 +40,12 @@ public class LogicsImpl implements Logics {
 
     @Override
     public void setFlag(Pair<Integer, Integer> pos, boolean value) {
-
+        this.flagged.add(pos);
     }
 
     @Override
     public boolean isFlagged(Pair<Integer, Integer> pos) {
-        return false;
+        return flagged.contains(pos);
     }
 
     @Override
