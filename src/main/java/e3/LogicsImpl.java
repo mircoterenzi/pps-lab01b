@@ -1,10 +1,30 @@
 package e3;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 public class LogicsImpl implements Logics {
 
-    public LogicsImpl(int size) {
+    private final Random random = new Random();
+    private final List<Pair<Integer, Integer>> mines = new ArrayList<>();
+    private final int size;
+
+    private void generateMines(int amount) {
+        if (amount != 0) {
+            Pair<Integer, Integer> pos = new Pair<>(this.random.nextInt(this.size), this.random.nextInt(this.size));
+            if (!this.mines.contains(pos)) {
+                this.mines.add(pos);
+                amount--;
+            }
+            generateMines(amount);
+        }
+    }
+
+    public LogicsImpl(int size, int mines) {
+        this.size = size;
+        generateMines(mines);
     }
 
     @Override
@@ -29,7 +49,7 @@ public class LogicsImpl implements Logics {
 
     @Override
     public boolean isMine(Pair<Integer, Integer> pos) {
-        return false;
+        return this.mines.contains(pos);
     }
 
     @Override

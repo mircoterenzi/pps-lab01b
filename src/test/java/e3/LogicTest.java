@@ -3,16 +3,17 @@ package e3;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LogicTest {
 
     public static final int SIZE = 5;
+    public static final int MINES = 3;
     private Logics logics;
 
     @BeforeEach
     public void setUp() {
-        this.logics = new LogicsImpl(SIZE);
+        this.logics = new LogicsImpl(SIZE, MINES);
     }
 
     @Test
@@ -30,5 +31,19 @@ public class LogicTest {
     @Test
     public void testInitiallyGameNotWon() {
         assertFalse(this.logics.isGameCompleted());
+    }
+
+    @Test
+    public void testRightMinesAmountGeneration() {
+        int mines = 0;
+        for (int x = 0; x < SIZE; x++) {
+            for (int y = 0; y < SIZE; y++) {
+                Pair<Integer, Integer> pos = new Pair<>(x, y);
+                if (this.logics.isMine(pos)) {
+                    mines++;
+                }
+            }
+        }
+        assertEquals(MINES, mines);
     }
 }
