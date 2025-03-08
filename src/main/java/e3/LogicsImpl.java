@@ -60,7 +60,7 @@ public class LogicsImpl implements Logics {
 
     @Override
     public boolean isGameCompleted() {
-        return false;
+        return cells.size() == mines.size() + counters.size();
     }
 
     @Override

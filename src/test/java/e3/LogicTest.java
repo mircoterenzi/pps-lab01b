@@ -123,4 +123,14 @@ public class LogicTest {
                 () -> assertTrue(this.logics.getCounter(new Pair<>(1, 0)).isPresent())
         );
     }
+
+    @Test
+    public void testVictoryIfAllRightCellsAreOpened() {
+        getCellList().forEach(cell -> {
+            if (!this.logics.isMine(cell)) {
+                this.logics.openCell(cell);
+            }
+        });
+        assertTrue(this.logics.isGameCompleted());
+    }
 }
