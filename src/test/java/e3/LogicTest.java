@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -111,5 +110,17 @@ public class LogicTest {
         this.logics = new LogicsImpl(2, 1); // Overrides the BeforeEach declaration
         Pair<Integer, Integer> pos = getNotMine();
         assertEquals(Optional.empty(), this.logics.getCounter(pos));
+    }
+
+    @Test
+    public void testOpenAdjacentIfCounterIsZero() {
+        this.logics = new LogicsImpl(2, 0); // Overrides the BeforeEach declaration
+        this.logics.openCell(new Pair<>(0, 0));
+        assertAll(
+                () -> assertTrue(this.logics.getCounter(new Pair<>(0, 0)).isPresent()),
+                () -> assertTrue(this.logics.getCounter(new Pair<>(0, 1)).isPresent()),
+                () -> assertTrue(this.logics.getCounter(new Pair<>(1, 0)).isPresent()),
+                () -> assertTrue(this.logics.getCounter(new Pair<>(1, 0)).isPresent())
+        );
     }
 }

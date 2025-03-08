@@ -41,12 +41,20 @@ public class LogicsImpl implements Logics {
     @Override
     public boolean openCell(Pair<Integer, Integer> pos) {
         int adjacentMines = 0;
-        for (Pair<Integer, Integer> cell : cells) {
-            if (areAdjacent(pos, cell) && this.isMine(cell)) {
+        List<Pair<Integer, Integer>> adjacentCells = cells.stream()
+                .filter(cell -> areAdjacent(cell, pos))
+                .toList();
+        for (Pair<Integer, Integer> cell : adjacentCells) {
+            if (this.isMine(cell)) {
                 adjacentMines++;
             }
         }
         counters.put(pos, adjacentMines);
+        if (adjacentMines == 0) {
+            adjacentCells.stream()
+                    .filter(cell -> this.getCounter(cell).isEmpty())
+                    .forEach(this::openCell);
+        }
         return isMine(pos);
     }
 
