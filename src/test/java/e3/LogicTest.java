@@ -73,4 +73,22 @@ public class LogicTest {
         this.logics.setFlag(CELL, true);
         this.logics.setFlag(CELL, false);
     }
+
+    @Test
+    public void testGetTrueIfOpenMineCell() {
+        Pair<Integer, Integer> pos = getCellList().stream()
+                .filter(cell -> this.logics.isMine(cell))
+                .toList()
+                .getFirst();
+        assertTrue(this.logics.openCell(pos));
+    }
+
+    @Test
+    public void testGetFalseIfOpenNotMineCell() {
+        Pair<Integer, Integer> pos = getCellList().stream()
+                .filter(cell -> !this.logics.isMine(cell))
+                .toList()
+                .getFirst();
+        assertFalse(this.logics.openCell(pos));
+    }
 }

@@ -30,7 +30,7 @@ public class LogicsImpl implements Logics {
 
     @Override
     public boolean openCell(Pair<Integer, Integer> pos) {
-        return false;
+        return isMine(pos);
     }
 
     @Override
