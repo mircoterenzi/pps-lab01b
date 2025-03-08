@@ -40,7 +40,11 @@ public class LogicsImpl implements Logics {
 
     @Override
     public void setFlag(Pair<Integer, Integer> pos, boolean value) {
-        this.flagged.add(pos);
+        if (value) {
+            this.flagged.add(pos);
+        } else {
+            this.flagged.remove(pos);
+        }
     }
 
     @Override

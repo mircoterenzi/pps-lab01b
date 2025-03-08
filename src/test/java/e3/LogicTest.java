@@ -53,4 +53,10 @@ public class LogicTest {
         this.logics.setFlag(CELL, true);
         assertTrue(this.logics.isFlagged(CELL));
     }
+
+    @Test
+    public void testMultipleSetFlag() {
+        this.logics.setFlag(CELL, true);
+        this.logics.setFlag(CELL, false);
+    }
 }
