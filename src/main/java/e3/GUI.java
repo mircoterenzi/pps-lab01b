@@ -81,7 +81,11 @@ public class GUI extends JFrame {
         for (var entry: this.buttons.entrySet()) {
             Pair<Integer, Integer> pos = entry.getValue();
             JButton button = entry.getKey();
-            this.logics.getCounter(pos).ifPresent(counter -> button.setText(Integer.toString(counter)));
+            Optional<Integer> counter = this.logics.getCounter(pos);
+            if (counter.isPresent()) {
+                button.setText(Integer.toString(counter.get()));
+                button.setEnabled(false);
+            }
             if (this.logics.isFlagged(pos)) {
                 button.setText("F");
             }
