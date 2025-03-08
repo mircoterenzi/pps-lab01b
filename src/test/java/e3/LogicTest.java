@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -83,12 +85,31 @@ public class LogicTest {
         assertTrue(this.logics.openCell(pos));
     }
 
-    @Test
-    public void testGetFalseIfOpenNotMineCell() {
-        Pair<Integer, Integer> pos = getCellList().stream()
+    private Pair<Integer, Integer> getNotMine() {
+        return getCellList().stream()
                 .filter(cell -> !this.logics.isMine(cell))
                 .toList()
                 .getFirst();
+    }
+
+    @Test
+    public void testGetFalseIfOpenNotMineCell() {
+        Pair<Integer, Integer> pos = getNotMine();
         assertFalse(this.logics.openCell(pos));
+    }
+
+    @Test
+    public void testGetCounterForAnOpenedCell() {
+        this.logics = new LogicsImpl(2, 1); // Overrides the BeforeEach declaration
+        Pair<Integer, Integer> pos = getNotMine();
+        this.logics.openCell(pos);
+        assertEquals(Optional.of(1), this.logics.getCounter(pos));
+    }
+
+    @Test
+    public void testEmptyIfCellIsNotOpened() {
+        this.logics = new LogicsImpl(2, 1); // Overrides the BeforeEach declaration
+        Pair<Integer, Integer> pos = getNotMine();
+        assertEquals(Optional.empty(), this.logics.getCounter(pos));
     }
 }

@@ -1,15 +1,16 @@
 package e3;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
+
+import static java.lang.Math.abs;
 
 public class LogicsImpl implements Logics {
 
     private final Random random = new Random();
+    private final List<Pair<Integer, Integer>> cells = new ArrayList<>();
     private final List<Pair<Integer, Integer>> mines = new ArrayList<>();
     private final List<Pair<Integer, Integer>> flagged = new ArrayList<>();
+    private final HashMap<Pair<Integer, Integer>, Integer> counters = new HashMap<>();
     private final int size;
 
     private void generateMines(int amount) {
@@ -25,11 +26,27 @@ public class LogicsImpl implements Logics {
 
     public LogicsImpl(int size, int mines) {
         this.size = size;
+        for (int x = 0; x < this.size; x++) {
+            for (int y = 0; y < this.size; y++) {
+                this.cells.add(new Pair<>(x, y));
+            }
+        }
         generateMines(mines);
+    }
+
+    private boolean areAdjacent(Pair<Integer, Integer> first, Pair<Integer, Integer> second) {
+        return abs(first.getX() - second.getX()) == 1 || abs(first.getY() - second.getY()) == 1;
     }
 
     @Override
     public boolean openCell(Pair<Integer, Integer> pos) {
+        int adjacentMines = 0;
+        for (Pair<Integer, Integer> cell : cells) {
+            if (areAdjacent(pos, cell) && this.isMine(cell)) {
+                adjacentMines++;
+            }
+        }
+        counters.put(pos, adjacentMines);
         return isMine(pos);
     }
 
@@ -59,6 +76,6 @@ public class LogicsImpl implements Logics {
 
     @Override
     public Optional<Integer> getCounter(Pair<Integer, Integer> pos) {
-        return Optional.empty();
+        return counters.containsKey(pos) ? Optional.of(counters.get(pos)) : Optional.empty();
     }
 }
