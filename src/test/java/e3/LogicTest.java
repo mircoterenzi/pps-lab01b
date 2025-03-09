@@ -1,137 +1,126 @@
 package e3;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiFunction;
+import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LogicTest {
 
-    public static final int SIZE = 5;
-    public static final int MINES = 3;
-    public static final Pair<Integer, Integer> CELL = new Pair<>(0,0);
-    private Logics logics;
+    public static final Pair<Integer, Integer> FIRST_POSITION = new Pair<>(0, 0);
+    public static final int DEFAULT_SIZE = 5;
+    public static final int FULLY_ADJACENT_SIZE = 2;
+    public static final int NO_MINES = 0;
+    public static final int SINGLE_MINE = 1;
+    public static final int DEFAULT_MINES = 3;
 
-    @BeforeEach
-    public void setUp() {
-        this.logics = new LogicsImpl(SIZE, MINES);
-    }
-
-    private List<Pair<Integer, Integer>> getCellList(int size) {
-        List<Pair<Integer, Integer>> cells = new ArrayList<>();
+    private List<Pair<Integer, Integer>> getPositionListGivenSize(int size) {
+        List<Pair<Integer, Integer>> list = new ArrayList<>();
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                cells.add(new Pair<>(x, y));
+                list.add(new Pair<>(x, y));
             }
         }
-        return cells;
-    }
-
-    private <X> X checkOnEachCell(X initialValue, BiFunction<Pair<Integer, Integer>, X, X> updateFunction) {
-        X value = initialValue;
-        for (Pair<Integer, Integer> cell : getCellList(SIZE)) {
-            value = updateFunction.apply(cell, value);
-        }
-        return value;
+        return list;
     }
 
     @Test
     public void testInitiallyNotFlagged() {
-        assertFalse(checkOnEachCell(
-                false,
-                (cell, isAtLeastOneFlagged) ->
-                        isAtLeastOneFlagged || this.logics.isFlagged(cell)
-        ));
+        Logics logics = new LogicsImpl(DEFAULT_SIZE, DEFAULT_MINES);
+        assertFalse(getPositionListGivenSize(DEFAULT_SIZE).stream().anyMatch(logics::isFlagged));
     }
 
     @Test
     public void testInitiallyGameNotWon() {
-        assertFalse(this.logics.isGameCompleted());
+        Logics logics = new LogicsImpl(DEFAULT_SIZE, DEFAULT_MINES);
+        assertFalse(logics.isGameCompleted());
     }
 
     @Test
     public void testRightMinesAmountGeneration() {
-        assertEquals(MINES, checkOnEachCell(
-                0,
-                (cell, mineCounter) ->
-                        this.logics.isMine(cell) ? mineCounter + 1 : mineCounter
-        ));
-    }
-
-    @Test
-    public void testSetFlag() {
-        this.logics.setFlag(CELL, true);
-        assertTrue(this.logics.isFlagged(CELL));
-    }
-
-    @Test
-    public void testMultipleSetFlag() {
-        this.logics.setFlag(CELL, true);
-        this.logics.setFlag(CELL, false);
-    }
-
-    @Test
-    public void testGetTrueIfVisitMineCell() {
-        Pair<Integer, Integer> pos = getCellList(SIZE).stream()
-                .filter(cell -> this.logics.isMine(cell))
-                .toList()
-                .getFirst();
-        assertTrue(this.logics.visit(pos));
-    }
-
-    private Pair<Integer, Integer> getNotMine(int size) {
-        return getCellList(size).stream()
-                .filter(cell -> !this.logics.isMine(cell))
-                .toList()
-                .getFirst();
-    }
-
-    @Test
-    public void testGetFalseIfVisitNotMineCell() {
-        Pair<Integer, Integer> pos = getNotMine(SIZE);
-        assertFalse(this.logics.visit(pos));
-    }
-
-    @Test
-    public void testGetCounterForVisitedCell() {
-        this.logics = new LogicsImpl(2, 1); // Overrides the BeforeEach declaration
-        Pair<Integer, Integer> pos = getNotMine(2);
-        this.logics.visit(pos);
-        assertEquals(Optional.of(1), this.logics.getCounter(pos));
-    }
-
-    @Test
-    public void testEmptyIfCellIsNotVisited() {
-        this.logics = new LogicsImpl(2, 1); // Overrides the BeforeEach declaration
-        Pair<Integer, Integer> pos = getNotMine(2);
-        assertEquals(Optional.empty(), this.logics.getCounter(pos));
-    }
-
-    @Test
-    public void testVisitAdjacentIfCounterIsZero() {
-        this.logics = new LogicsImpl(2, 0); // Overrides the BeforeEach declaration
-        this.logics.visit(CELL);
-        assertAll(
-                () -> assertTrue(this.logics.getCounter(new Pair<>(0, 0)).isPresent()),
-                () -> assertTrue(this.logics.getCounter(new Pair<>(0, 1)).isPresent()),
-                () -> assertTrue(this.logics.getCounter(new Pair<>(1, 0)).isPresent()),
-                () -> assertTrue(this.logics.getCounter(new Pair<>(1, 0)).isPresent())
+        Logics logics = new LogicsImpl(DEFAULT_SIZE, DEFAULT_MINES);
+        assertEquals(DEFAULT_MINES, getPositionListGivenSize(DEFAULT_SIZE).stream()
+                .filter(logics::isMine)
+                .count()
         );
     }
 
     @Test
-    public void testVictoryIfAllRightCellsAreVisited() {
-        getCellList(SIZE).forEach(cell -> {
-            if (!this.logics.isMine(cell)) {
-                this.logics.visit(cell);
+    public void testSetFlag() {
+        Logics logics = new LogicsImpl(DEFAULT_SIZE, DEFAULT_MINES);
+        logics.setFlag(FIRST_POSITION, true);
+        assertTrue(logics.isFlagged(FIRST_POSITION));
+    }
+
+    @Test
+    public void testMultipleSetFlag() {
+        Logics logics = new LogicsImpl(DEFAULT_SIZE, DEFAULT_MINES);
+        logics.setFlag(FIRST_POSITION, true);
+        logics.setFlag(FIRST_POSITION, false);
+        assertFalse(logics.isFlagged(FIRST_POSITION));
+    }
+
+    @Test
+    public void testGetTrueIfVisitMine() {
+        Logics logics = new LogicsImpl(DEFAULT_SIZE, DEFAULT_MINES);
+        Pair<Integer, Integer> pos = getPositionListGivenSize(DEFAULT_SIZE).stream()
+                .filter(logics::isMine)
+                .toList()
+                .getFirst();
+        assertTrue(logics.visit(pos));
+    }
+
+    private Pair<Integer, Integer> getNotMine(Logics logics, int size) {
+        return getPositionListGivenSize(size).stream()
+                .filter(Predicate.not(logics::isMine))
+                .toList()
+                .getFirst();
+    }
+
+    @Test
+    public void testGetFalseIfVisitNotMinePosition() {
+        Logics logics = new LogicsImpl(DEFAULT_SIZE, DEFAULT_MINES);
+        Pair<Integer, Integer> pos = getNotMine(logics, DEFAULT_SIZE);
+        assertFalse(logics.visit(pos));
+    }
+
+    @Test
+    public void testGetCounterForVisitedPosition() {
+        Logics logics = new LogicsImpl(FULLY_ADJACENT_SIZE, SINGLE_MINE);
+        Pair<Integer, Integer> pos = getNotMine(logics, FULLY_ADJACENT_SIZE);
+        logics.visit(pos);
+        assertEquals(Optional.of(SINGLE_MINE), logics.getCounter(pos));
+    }
+
+    @Test
+    public void testEmptyIfPositionIsNotVisited() {
+        Logics logics = new LogicsImpl(FULLY_ADJACENT_SIZE, SINGLE_MINE);
+        Pair<Integer, Integer> pos = getNotMine(logics, FULLY_ADJACENT_SIZE);
+        assertEquals(Optional.empty(), logics.getCounter(pos));
+    }
+
+    @Test
+    public void testVisitAdjacentIfCounterIsZero() {
+        Logics logics = new LogicsImpl(FULLY_ADJACENT_SIZE, NO_MINES);
+        logics.visit(FIRST_POSITION);
+        assertTrue(getPositionListGivenSize(FULLY_ADJACENT_SIZE).stream()
+                .allMatch(pos -> logics.getCounter(pos).isPresent())
+        );
+    }
+
+    @Test
+    public void testVictoryIfAllRightPositionsAreVisited() {
+        Logics logics = new LogicsImpl(DEFAULT_SIZE, DEFAULT_MINES);
+        getPositionListGivenSize(DEFAULT_SIZE).forEach(pos -> {
+            if (!logics.isMine(pos)) {
+                logics.visit(pos);
             }
         });
-        assertTrue(this.logics.isGameCompleted());
+        assertTrue(logics.isGameCompleted());
     }
 }
 
