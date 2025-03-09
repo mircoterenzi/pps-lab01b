@@ -38,9 +38,7 @@ public class BoardTest {
 
     @Test
     public void testGetExceptionIfMoreMinesThanCells() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            Board board = new BoardImpl(SINGLE_CELL_SIZE, SINGLE_MINE + 1);
-        });
+        assertThrows(IllegalArgumentException.class, () -> new BoardImpl(SINGLE_CELL_SIZE, SINGLE_MINE + 1));
     }
 
     @Test
