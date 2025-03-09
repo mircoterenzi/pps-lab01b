@@ -14,7 +14,7 @@ public class LogicTest {
 
     public static final int SIZE = 5;
     public static final int MINES = 3;
-    public static final Pair<Integer, Integer> CELL = new Pair<>(2,2);
+    public static final Pair<Integer, Integer> CELL = new Pair<>(0,0);
     private Logics logics;
 
     @BeforeEach
@@ -22,10 +22,10 @@ public class LogicTest {
         this.logics = new LogicsImpl(SIZE, MINES);
     }
 
-    private List<Pair<Integer, Integer>> getCellList() {
+    private List<Pair<Integer, Integer>> getCellList(int size) {
         List<Pair<Integer, Integer>> cells = new ArrayList<>();
-        for (int x = 0; x < SIZE; x++) {
-            for (int y = 0; y < SIZE; y++) {
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
                 cells.add(new Pair<>(x, y));
             }
         }
@@ -34,7 +34,7 @@ public class LogicTest {
 
     private <X> X checkOnEachCell(X initialValue, BiFunction<Pair<Integer, Integer>, X, X> updateFunction) {
         X value = initialValue;
-        for (Pair<Integer, Integer> cell : getCellList()) {
+        for (Pair<Integer, Integer> cell : getCellList(SIZE)) {
             value = updateFunction.apply(cell, value);
         }
         return value;
@@ -56,9 +56,9 @@ public class LogicTest {
 
     @Test
     public void testRightMinesAmountGeneration() {
-        assertEquals(
-                MINES,
-                checkOnEachCell(0, (cell, mineCounter) ->
+        assertEquals(MINES, checkOnEachCell(
+                0,
+                (cell, mineCounter) ->
                         this.logics.isMine(cell) ? mineCounter + 1 : mineCounter
         ));
     }
@@ -77,15 +77,15 @@ public class LogicTest {
 
     @Test
     public void testGetTrueIfOpenMineCell() {
-        Pair<Integer, Integer> pos = getCellList().stream()
+        Pair<Integer, Integer> pos = getCellList(SIZE).stream()
                 .filter(cell -> this.logics.isMine(cell))
                 .toList()
                 .getFirst();
         assertTrue(this.logics.openCell(pos));
     }
 
-    private Pair<Integer, Integer> getNotMine() {
-        return getCellList().stream()
+    private Pair<Integer, Integer> getNotMine(int size) {
+        return getCellList(size).stream()
                 .filter(cell -> !this.logics.isMine(cell))
                 .toList()
                 .getFirst();
@@ -93,14 +93,14 @@ public class LogicTest {
 
     @Test
     public void testGetFalseIfOpenNotMineCell() {
-        Pair<Integer, Integer> pos = getNotMine();
+        Pair<Integer, Integer> pos = getNotMine(SIZE);
         assertFalse(this.logics.openCell(pos));
     }
 
     @Test
     public void testGetCounterForAnOpenedCell() {
         this.logics = new LogicsImpl(2, 1); // Overrides the BeforeEach declaration
-        Pair<Integer, Integer> pos = getNotMine();
+        Pair<Integer, Integer> pos = getNotMine(2);
         this.logics.openCell(pos);
         assertEquals(Optional.of(1), this.logics.getCounter(pos));
     }
@@ -108,14 +108,14 @@ public class LogicTest {
     @Test
     public void testEmptyIfCellIsNotOpened() {
         this.logics = new LogicsImpl(2, 1); // Overrides the BeforeEach declaration
-        Pair<Integer, Integer> pos = getNotMine();
+        Pair<Integer, Integer> pos = getNotMine(2);
         assertEquals(Optional.empty(), this.logics.getCounter(pos));
     }
 
     @Test
     public void testOpenAdjacentIfCounterIsZero() {
         this.logics = new LogicsImpl(2, 0); // Overrides the BeforeEach declaration
-        this.logics.openCell(new Pair<>(0, 0));
+        this.logics.openCell(CELL);
         assertAll(
                 () -> assertTrue(this.logics.getCounter(new Pair<>(0, 0)).isPresent()),
                 () -> assertTrue(this.logics.getCounter(new Pair<>(0, 1)).isPresent()),
@@ -126,7 +126,7 @@ public class LogicTest {
 
     @Test
     public void testVictoryIfAllRightCellsAreOpened() {
-        getCellList().forEach(cell -> {
+        getCellList(SIZE).forEach(cell -> {
             if (!this.logics.isMine(cell)) {
                 this.logics.openCell(cell);
             }
@@ -134,3 +134,4 @@ public class LogicTest {
         assertTrue(this.logics.isGameCompleted());
     }
 }
+
