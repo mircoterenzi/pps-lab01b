@@ -40,7 +40,7 @@ public class BoardImpl implements Board {
     }
 
     private boolean areAdjacent(Pair<Integer, Integer> first, Pair<Integer, Integer> second) {
-        return abs(first.getX() - second.getX()) <= 1 && abs(first.getY() - second.getY()) <= 1;
+        return abs(first.getX() - second.getX()) <= 1 && abs(first.getY() - second.getY()) <= 1 && !first.equals(second);
         }
 
     @Override
