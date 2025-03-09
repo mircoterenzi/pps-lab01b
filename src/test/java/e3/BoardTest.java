@@ -55,4 +55,21 @@ public class BoardTest {
                 () -> assertTrue(adjacentList.containsAll(positionList))
         );
     }
+
+    @Test
+    public void testAmountZeroIfThereAreNoMines() {
+        Board board = new BoardImpl(SIZE, NO_MINES);
+        assertEquals(NO_MINES, board.getAmountMinesAdjacentTo(this.getPositions().getFirst()));
+    }
+
+    @Test
+    public void testAmountIfMinesArePresent() {
+        Board board = new BoardImpl(SIZE, SINGLE_MINE);
+        Pair<Integer, Integer> position = this.getPositions().getFirst();
+        int minesAdjacentToPosition = SINGLE_MINE;
+        if (board.isMine(position)) {
+            minesAdjacentToPosition--;
+        }
+        assertEquals(minesAdjacentToPosition, board.getAmountMinesAdjacentTo(position));
+    }
 }
