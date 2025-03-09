@@ -4,8 +4,8 @@ import java.util.*;
 
 public class LogicsImpl implements Logics {
 
-    private final List<Pair<Integer, Integer>> flagged = new ArrayList<>();
     private final List<Pair<Integer, Integer>> visited = new ArrayList<>();
+    private final Manager flagManager = new FlagManager();
     private final Board board;
     private final int size, mines;
 
@@ -41,16 +41,12 @@ public class LogicsImpl implements Logics {
 
     @Override
     public void setFlag(Pair<Integer, Integer> pos, boolean value) {
-        if (value) {
-            this.flagged.add(pos);
-        } else {
-            this.flagged.remove(pos);
-        }
+        this.flagManager.set(pos, value);
     }
 
     @Override
     public boolean isFlagged(Pair<Integer, Integer> pos) {
-        return this.flagged.contains(pos);
+        return this.flagManager.getValue(pos);
     }
 
     @Override
