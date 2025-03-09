@@ -10,12 +10,14 @@ import static org.junit.jupiter.api.Assertions.*;
 public class BoardTest {
 
     public static final int SIZE = 2;
-    public static final int MINES = 1;
+    public static final int SINGLE_CELL_SIZE = 1;
+    public static final int NO_MINES = 0;
+    public static final int SINGLE_MINE = 1;
 
     private List<Pair<Integer, Integer>> getPositions() {
         List<Pair<Integer, Integer>> positions = new ArrayList<>();
-        for (int x = 0; x < SIZE; x++) {
-            for (int y = 0; y < SIZE; y++) {
+        for (int x = NO_MINES; x < SIZE; x++) {
+            for (int y = NO_MINES; y < SIZE; y++) {
                 positions.add(new Pair<>(x, y));
             }
         }
@@ -23,8 +25,27 @@ public class BoardTest {
     }
 
     @Test
+    public void testInitiallyNoMines() {
+        Board board = new BoardImpl(SINGLE_CELL_SIZE, NO_MINES);
+        assertFalse(board.isMine(this.getPositions().getFirst()));
+    }
+
+    @Test
+    public void testGetTrueIfCellIsMine() {
+        Board board = new BoardImpl(SINGLE_CELL_SIZE, SINGLE_MINE);
+        assertTrue(board.isMine(this.getPositions().getFirst()));
+    }
+
+    @Test
+    public void testGetExceptionIfMoreMinesThanCells() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Board board = new BoardImpl(SINGLE_CELL_SIZE, SINGLE_MINE + 1);
+        });
+    }
+
+    @Test
     public void testListAdjacentCells() {
-        Board board = new BoardImpl(SIZE, MINES);
+        Board board = new BoardImpl(SIZE, SINGLE_MINE);
         List<Pair<Integer, Integer>> positionList = this.getPositions();
         List<Pair<Integer, Integer>> adjacentList = board.getCellsAdjacentTo(positionList.removeFirst());
         System.out.println(positionList);

@@ -25,6 +25,9 @@ public class BoardImpl implements Board {
     }
 
     public BoardImpl(int size, int mines) {
+        if (mines > size * size) {
+            throw new IllegalArgumentException("Cannot create a board with more mines than cells");
+        }
         this.size = size;
         for (int x = 0; x < this.size; x++) {
             for (int y = 0; y < this.size; y++) {
