@@ -3,12 +3,11 @@ package e3;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
 
 public class BoardImpl implements Board {
 
-    private final Random random = new Random();
     private final List<Cell> cells = new ArrayList<>();
-    private final int size;
 
     private Cell getCellAtPosition(Pair<Integer, Integer> pos) {
         return this.cells.stream()
@@ -17,27 +16,31 @@ public class BoardImpl implements Board {
                 .orElseThrow(() -> new IllegalArgumentException("Trying to get a non-existing cell"));
     }
 
-    private void generateMines(int amount) {
-        if (amount != 0) {
-            Cell cell = getCellAtPosition(new Pair<>(this.random.nextInt(this.size), this.random.nextInt(this.size)));
-            if (!cell.isMine()) {
-                cell.setMine(true);
-                amount--;
+    private void generateCells(int size) {
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                this.cells.add(new CellImpl (new Pair<>(x, y)));
             }
-            generateMines(amount);
+        }
+    }
+
+    private void generateMines(int amount) {
+        Random random = new Random();
+        List<Cell> notMineCells = new ArrayList<>(this.cells.stream()
+                .filter(Predicate.not(Cell::isMine))
+                .toList());
+        if (notMineCells.size() < amount) {
+            throw new IllegalArgumentException("Cannot create a board with more mines than cells");
+        }
+        while (amount != 0) {
+            Cell cell = notMineCells.remove(random.nextInt(notMineCells.size()));
+            cell.setMine(true);
+            amount--;
         }
     }
 
     public BoardImpl(int size, int mines) {
-        if (mines > size * size) {
-            throw new IllegalArgumentException("Cannot create a board with more mines than cells");
-        }
-        this.size = size;
-        for (int x = 0; x < this.size; x++) {
-            for (int y = 0; y < this.size; y++) {
-                this.cells.add(new CellImpl (new Pair<>(x, y)));
-            }
-        }
+        generateCells(size);
         generateMines(mines);
     }
 
