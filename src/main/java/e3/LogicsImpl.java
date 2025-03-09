@@ -21,11 +21,11 @@ public class LogicsImpl implements Logics {
     }
 
     @Override
-    public boolean openCell(Pair<Integer, Integer> pos) {
+    public boolean visit(Pair<Integer, Integer> pos) {
         if (!this.visited.contains(pos)) {
             this.visited.add(pos);
             if (this.board.getAmountMinesAdjacentTo(pos) == 0) {
-                this.board.getCellsAdjacentTo(pos).forEach(this::openCell);
+                this.board.getCellsAdjacentTo(pos).forEach(this::visit);
             }
         }
         return this.isMine(pos);

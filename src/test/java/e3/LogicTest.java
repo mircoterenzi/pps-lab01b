@@ -76,12 +76,12 @@ public class LogicTest {
     }
 
     @Test
-    public void testGetTrueIfOpenMineCell() {
+    public void testGetTrueIfVisitMineCell() {
         Pair<Integer, Integer> pos = getCellList(SIZE).stream()
                 .filter(cell -> this.logics.isMine(cell))
                 .toList()
                 .getFirst();
-        assertTrue(this.logics.openCell(pos));
+        assertTrue(this.logics.visit(pos));
     }
 
     private Pair<Integer, Integer> getNotMine(int size) {
@@ -92,30 +92,30 @@ public class LogicTest {
     }
 
     @Test
-    public void testGetFalseIfOpenNotMineCell() {
+    public void testGetFalseIfVisitNotMineCell() {
         Pair<Integer, Integer> pos = getNotMine(SIZE);
-        assertFalse(this.logics.openCell(pos));
+        assertFalse(this.logics.visit(pos));
     }
 
     @Test
-    public void testGetCounterForAnOpenedCell() {
+    public void testGetCounterForVisitedCell() {
         this.logics = new LogicsImpl(2, 1); // Overrides the BeforeEach declaration
         Pair<Integer, Integer> pos = getNotMine(2);
-        this.logics.openCell(pos);
+        this.logics.visit(pos);
         assertEquals(Optional.of(1), this.logics.getCounter(pos));
     }
 
     @Test
-    public void testEmptyIfCellIsNotOpened() {
+    public void testEmptyIfCellIsNotVisited() {
         this.logics = new LogicsImpl(2, 1); // Overrides the BeforeEach declaration
         Pair<Integer, Integer> pos = getNotMine(2);
         assertEquals(Optional.empty(), this.logics.getCounter(pos));
     }
 
     @Test
-    public void testOpenAdjacentIfCounterIsZero() {
+    public void testVisitAdjacentIfCounterIsZero() {
         this.logics = new LogicsImpl(2, 0); // Overrides the BeforeEach declaration
-        this.logics.openCell(CELL);
+        this.logics.visit(CELL);
         assertAll(
                 () -> assertTrue(this.logics.getCounter(new Pair<>(0, 0)).isPresent()),
                 () -> assertTrue(this.logics.getCounter(new Pair<>(0, 1)).isPresent()),
@@ -125,10 +125,10 @@ public class LogicTest {
     }
 
     @Test
-    public void testVictoryIfAllRightCellsAreOpened() {
+    public void testVictoryIfAllRightCellsAreVisited() {
         getCellList(SIZE).forEach(cell -> {
             if (!this.logics.isMine(cell)) {
-                this.logics.openCell(cell);
+                this.logics.visit(cell);
             }
         });
         assertTrue(this.logics.isGameCompleted());

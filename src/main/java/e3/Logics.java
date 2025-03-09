@@ -10,7 +10,7 @@ public interface Logics {
      * @param pos The position of the cell to be checked.
      * @return true if the cell is a mine, false otherwise.
      */
-    boolean openCell(Pair<Integer, Integer> pos);
+    boolean visit(Pair<Integer, Integer> pos);
 
     /**
      * Tell if the game has been completed.
