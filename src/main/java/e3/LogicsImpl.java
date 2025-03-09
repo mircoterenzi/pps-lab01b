@@ -4,7 +4,7 @@ import java.util.*;
 
 public class LogicsImpl implements Logics {
 
-    private final List<Pair<Integer, Integer>> visited = new ArrayList<>();
+    private final Tracker visited = new VisitTracker();
     private final Manager flagManager = new FlagManager();
     private final Board board;
     private final int size, mines;
@@ -25,8 +25,8 @@ public class LogicsImpl implements Logics {
         if (this.isMine(pos)) {
             return true;
         }
-        if (!this.visited.contains(pos)) {
-            this.visited.add(pos);
+        if (!this.visited.isTracked(pos)) {
+            this.visited.track(pos);
             if (this.board.getAmountMinesAdjacentTo(pos) == 0) {
                 this.board.getCellsAdjacentTo(pos).forEach(this::visit);
             }
@@ -36,7 +36,7 @@ public class LogicsImpl implements Logics {
 
     @Override
     public boolean isGameCompleted() {
-        return this.visited.size() == this.size * this.size - this.mines;
+        return this.visited.getCount() == this.size * this.size - this.mines;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class LogicsImpl implements Logics {
 
     @Override
     public Optional<Integer> getCounter(Pair<Integer, Integer> pos) {
-        return this.visited.contains(pos) ? Optional.of(this.board.getAmountMinesAdjacentTo(pos)) : Optional.empty();
+        return this.visited.isTracked(pos) ? Optional.of(this.board.getAmountMinesAdjacentTo(pos)) : Optional.empty();
     }
 }
 
