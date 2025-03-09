@@ -4,20 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static java.lang.Math.abs;
-
 public class BoardImpl implements Board {
 
     private final Random random = new Random();
-    private final List<Pair<Integer, Integer>> cells = new ArrayList<>();
-    private final List<Pair<Integer, Integer>> mines = new ArrayList<>();
+    private final List<Cell> cells = new ArrayList<>();
     private final int size;
+
+    private Cell getCellAtPosition(Pair<Integer, Integer> pos) {
+        return this.cells.stream()
+                .filter(c -> c.equals(new CellImpl(pos)))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Trying to get a non-existing cell"));
+    }
 
     private void generateMines(int amount) {
         if (amount != 0) {
-            Pair<Integer, Integer> pos = new Pair<>(this.random.nextInt(this.size), this.random.nextInt(this.size));
-            if (!this.mines.contains(pos)) {
-                this.mines.add(pos);
+            Cell cell = getCellAtPosition(new Pair<>(this.random.nextInt(this.size), this.random.nextInt(this.size)));
+            if (!cell.isMine()) {
+                cell.setMine(true);
                 amount--;
             }
             generateMines(amount);
@@ -31,7 +35,7 @@ public class BoardImpl implements Board {
         this.size = size;
         for (int x = 0; x < this.size; x++) {
             for (int y = 0; y < this.size; y++) {
-                this.cells.add(new Pair<>(x, y));
+                this.cells.add(new CellImpl (new Pair<>(x, y)));
             }
         }
         generateMines(mines);
@@ -39,17 +43,14 @@ public class BoardImpl implements Board {
 
     @Override
     public boolean isMine(Pair<Integer, Integer> pos) {
-        return this.mines.contains(pos);
+        return getCellAtPosition(pos).isMine();
     }
-
-    private boolean areAdjacent(Pair<Integer, Integer> first, Pair<Integer, Integer> second) {
-        return abs(first.getX() - second.getX()) <= 1 && abs(first.getY() - second.getY()) <= 1 && !first.equals(second);
-        }
 
     @Override
     public List<Pair<Integer, Integer>> getCellsAdjacentTo(Pair<Integer, Integer> pos) {
         return this.cells.stream()
-                .filter(cell -> this.areAdjacent(cell, pos))
+                .filter(cell -> cell.isAdjacentTo(getCellAtPosition(pos)))
+                .map(Cell::getPosition)
                 .toList();
     }
 
@@ -60,3 +61,4 @@ public class BoardImpl implements Board {
                 .count();
     }
 }
+
